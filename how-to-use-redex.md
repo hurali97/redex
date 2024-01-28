@@ -44,7 +44,7 @@ make -j4 check
 ```
 - You should get the following output:
 
-![Test Success](./redex/assets/test-success.png)
+![Test Success](./assets/test-success.png)
 
 Now, we have everything setup, let's move on to setup our react-native app.
 
@@ -120,7 +120,7 @@ adb install ./output.apk
 
 Uh oh it's crashing with the following error, you can see the error in Android Studio's Logcat:
 
-![Emoji Error](./redex/assets/emoji-error.png)
+![Emoji Error](./assets/emoji-error.png)
 
 Analysing this error, we see that ReDex has stripped out the `EmojiCompatInitializer` class. We will need to add a rule to keep this class in the ProGuard rules file. We can remove the previously added dummy rule and add the following rule:
 
@@ -132,7 +132,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![JNI Error](./redex/assets/jni-error.png)
+![JNI Error](./assets/jni-error.png)
 
 Analysing this error, we see that ReDex has stripped out the `JNI` classes. We will need to add a rule to keep these classes in the ProGuard rules file.
 
@@ -144,7 +144,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![React Bridge Error](./redex/assets/react-bridge-error.png)
+![React Bridge Error](./assets/react-bridge-error.png)
 
 If we look closely at the error, we see that static methods in class `com.facebook.react.bridge.CatalystInstanceImpl` have been stripped out. We will need to add a rule to leave this class instact in the ProGuard rules file.
 
@@ -156,7 +156,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![Yoga Error](./redex/assets/yoga-error.png)
+![Yoga Error](./assets/yoga-error.png)
 
 It seems that ReDex has stripped out the `Yoga` classes. We will need to add a rule to keep these classes in the ProGuard rules file.
 
@@ -168,7 +168,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![JavaScript Module Error](./redex/assets/js-module-error.png)
+![JavaScript Module Error](./assets/js-module-error.png)
 
 So this one's a bit tricky as we don't directly know which class or method from what class is missing. If we see in the codebase of React Native in `ReactRootView.java` there's `catalystInstance.getJSModule(AppRegistry.class).runApplication(jsAppModuleName, appParams)` being invoked and since we get a null pointer exception, we can assume that `catalystInstance.getJSModule(AppRegistry.class)` is returning null. So we will need to add a rule to keep every class that implements `JavaScriptModule` interface.
 
@@ -180,7 +180,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![Native Module Error](./redex/assets/native-module-error.png)
+![Native Module Error](./assets/native-module-error.png)
 
 Analysing this error we see that for some reason React can't find native modules. By the looks of it, seems that ReDex has stripped out the `NativeModule` classes. We will need to add a rule to keep these classes in the ProGuard rules file.
 
@@ -192,7 +192,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![Text Views Error](./redex/assets/views-text-error.png)
+![Text Views Error](./assets/views-text-error.png)
 
 Okay so looks like the text classes in `com.facebook.react.views.text` have been stripped out. We will need to add a rule to keep these classes in the ProGuard rules file.
 
@@ -204,7 +204,7 @@ Let's re-run ReDex, install the APK and launch it.
 
 This time we get another error:
 
-![Image Pipeline Error](./redex/assets/image-pipeline-error.png)
+![Image Pipeline Error](./assets/image-pipeline-error.png)
 
 Alirght, so now we see that classes inside `com.facebook.imagepipeline` have been stripped out. We will need to add a rule to keep these classes in the ProGuard rules file.
 
@@ -278,7 +278,7 @@ python3 ./redex.py --proguard-config config/proguard-rules.pro -c config/default
 Let's install the APK to verify if it's working fine. We get the following error:
 
 
-![Native Error](./redex/assets/native-error.png)
+![Native Error](./assets/native-error.png)
 
 We see that there's some methods being removed in the hermes library. In the trace, we also see that the native c++ functions are having some troubles in execution. We can try adding the following ProGuard rule to see if it fixes the issue:
 
